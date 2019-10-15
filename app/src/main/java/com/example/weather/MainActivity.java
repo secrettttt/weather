@@ -133,10 +133,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //定位
         getLocationFromBaiduAPI();
 
+        //这里是利用接口实现事件监听器，除了用接口，还可以使用匿名类实现
         updateButton = (ImageView)findViewById(R.id.title_city_update);
+        //setOnClickListener的参数要求是一个实现了OnClickListener接口的对象实体，它可以是任何类的实例，只要该类实现了OnClickListener
+        //在这里，它指的是当前的MainActivity对象
         updateButton.setOnClickListener(this);
-        //setOnClickListener的参数要求是一个实现了OnClickListener接口的对象实体，它可以是任何类的实例，只要该类实现了OnClickListener。
-        //在这里，它指的是当前的MainActivity对象。
+
 
         locateButton = (ImageView)findViewById(R.id.title_city_locate);
         locateButton.setOnClickListener(this);
