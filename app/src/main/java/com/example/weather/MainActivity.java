@@ -2,10 +2,20 @@ package com.example.weather;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -95,17 +105,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //通过setContentView(View)接口把布局加载到Activity创建的窗口上
+        setContentView(R.layout.main);
+
         //隐藏标题栏
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        //动态申请权限
+        final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//如果 API level 是大于等于 23(Android 6.0) 时
+            //判断是否具有权限
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                //判断是否需要向用户解释为什么需要申请该权限
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                }
+                //请求权限
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        REQUEST_CODE_ACCESS_COARSE_LOCATION);
+            }
+        }
+
+
         //定位
         getLocationFromBaiduAPI();
 
-        setContentView(R.layout.main);
-
         updateButton = (ImageView)findViewById(R.id.title_city_update);
         updateButton.setOnClickListener(this);
+        //setOnClickListener的参数要求是一个实现了OnClickListener接口的对象实体，它可以是任何类的实例，只要该类实现了OnClickListener。
+        //在这里，它指的是当前的MainActivity对象。
 
         locateButton = (ImageView)findViewById(R.id.title_city_locate);
         locateButton.setOnClickListener(this);
@@ -352,4 +383,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mLocationClient.start();
         getWeatherDataFromNet(locationResult);
     }
+
+
+    //首先检查定位是否打开
+    final boolean isLocationEnable(Context context) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        boolean networkProvider = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean gpsProvider = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (networkProvider || gpsProvider) return true;
+        return false;
+    }
+
+    //如果定位已经打开，OK 很好，如果定位没有打开，则需要用户去打开
+    private static final int REQUEST_CODE_LOCATION_SETTINGS = 2;
+    private void setLocationService() {
+        Intent locationIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        this.startActivityForResult(locationIntent, REQUEST_CODE_LOCATION_SETTINGS);
+    }
+
+    //进入定位设置界面，让用户自己选择是否打开定位。选择的结果获取
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_LOCATION_SETTINGS) {
+            if (isLocationEnable(this)) {
+                //定位已打开的处理
+            } else {
+                //定位依然没有打开的处理
+            }
+        } else super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 }
