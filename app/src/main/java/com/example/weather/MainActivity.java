@@ -45,6 +45,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+    private ImageView managerButton;
     private ImageView updateButton;
     private ImageView locateButton;
     private RelativeLayout main_background;
@@ -112,6 +113,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
+        locationResult = "北京市";
+
+        //Intent接收端
+        Intent intent = getIntent();
+        if(intent.getStringExtra("selected_city")!= null)//判断intent是否有值传入
+        {
+            locationResult = intent.getStringExtra("selected_city");
+        }
+
         //动态申请权限
         final int REQUEST_CODE_ACCESS_COARSE_LOCATION = 1;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//如果 API level 是大于等于 23(Android 6.0) 时
@@ -132,6 +142,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //定位
         getLocationFromBaiduAPI();
+
+        managerButton = (ImageView)findViewById(R.id.title_city_manager);
+        managerButton.setOnClickListener(this);
 
         //这里是利用接口实现事件监听器，除了用接口，还可以使用匿名类实现
         updateButton = (ImageView)findViewById(R.id.title_city_update);
@@ -175,6 +188,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onClick(View v) {
+        if(v.getId()==R.id.title_city_manager)
+        {
+            Intent intent = new Intent(this,CitySelectionActivity.class);
+            startActivity(intent);
+        }
         if(v.getId()==R.id.title_city_update)
         {
             getWeatherDataFromNet(locationResult);
