@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_city_selection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/acs_background_default">
+
+    <RelativeLayout
+        android:id="@+id/city_selection_title"
+        android:layout_width="match_parent"
+        android:layout_height="35.0dp"
+        android:background="#000000">
+
+        <ImageView
+            android:id="@+id/city_selection_title_back"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/city_selection_title_back" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/city_selection_title_back"
+            android:gravity="center_vertical"
+            android:text="请选择城市："
+            android:textSize="25.0dp"
+            android:textColor="#FFFFFF"/>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_city"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/city_selection_title"/>
+
+</RelativeLayout>
