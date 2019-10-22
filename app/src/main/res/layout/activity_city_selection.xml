@@ -17,11 +17,30 @@
             android:layout_height="match_parent"
             android:src="@drawable/city_selection_title_back" />
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/city_selection_title_selected_tips"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/city_selection_title_back"
             android:gravity="center_vertical"
-            android:text="请选择城市："
+            android:text="请选择城市，"
+            android:textSize="25.0dp"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:id="@+id/city_selection_title_preferences_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/city_selection_title_selected_tips"
+            android:gravity="center_vertical"
+            android:text="当前城市："
+            android:textSize="25.0dp"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:id="@+id/city_selection_title_preferences_city"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/city_selection_title_preferences_tips"
+            android:gravity="center_vertical"
+            android:text="北京"
             android:textSize="25.0dp"
             android:textColor="#FFFFFF"/>
     </RelativeLayout>

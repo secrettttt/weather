@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import java.util.Calendar;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyLocationListener myListener = new MyLocationListener();
 
     private String locationResult = "北京市";
+
+    private Context mContext;
+    private SharedPreferencesHelper sh;
+    public static Map<String,String> data;
 
     private void initView()
     {
@@ -113,13 +118,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
 
-        locationResult = "北京市";
+        mContext = getApplicationContext();
+        sh = new SharedPreferencesHelper(mContext);
+        data = sh.read();
+        locationResult = data.get("PreferencesCity");
 
         //Intent接收端
         Intent intent = getIntent();
         if(intent.getStringExtra("selected_city")!= null)//判断intent是否有值传入
         {
-            locationResult = intent.getStringExtra("selected_city");
+            if(intent.getIntExtra("changePreferencesCity",0) == 1)
+            {
+                sh.save(intent.getStringExtra("selected_city"));
+                data = sh.read();
+                locationResult = data.get("PreferencesCity");
+            }
+            else
+            {
+                locationResult = intent.getStringExtra("selected_city");
+            }
         }
 
         //动态申请权限
